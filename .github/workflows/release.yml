@@ -1,0 +1,32 @@
+name: Package and release
+on:
+  push:
+    tags: ['v*']
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.19.0'
+      - name: Verify version, build and syntax
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          node --input-type=module -e 'import fs from "node:fs"; const p=JSON.parse(fs.readFileSync("package.json","utf8")); if(process.env.RELEASE_TAG!==`v${p.version}`) throw new Error("Tag/version mismatch")'
+          npm run build
+          npm run check
+          git diff --exit-code -- lib
+      - name: Package without installing host dependencies
+        run: |
+          npm pack --ignore-scripts
+          sha256sum dsh-compaction-session-*.tgz > SHA256SUMS.txt
+      - name: Publish prerelease assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          gh release create "$RELEASE_TAG" dsh-compaction-session-*.tgz SHA256SUMS.txt --verify-tag --prerelease --title "$RELEASE_TAG — DSH rc.5" --notes-file RELEASE_NOTES.md
