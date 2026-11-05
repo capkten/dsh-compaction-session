@@ -1,4 +1,4 @@
-# 会话压缩修复（DSH 0.2.1-rc.5）
+# 会话压缩修复（DSH 0.2.2-rc.1）
 
 [安装步骤](INSTALL.md) · [下载安装包](https://github.com/capkten/dsh-compaction-session/releases) · [English](README.md)
 

@@ -2,7 +2,7 @@
 
 [中文说明](README.zh.md) · [Installation / 安装步骤](INSTALL.md) · [Releases](https://github.com/capkten/dsh-compaction-session/releases)
 
-This local plugin derives from the MIT-licensed official `@deepseek-ai/dsh-compaction-basic` 0.2.1-rc.5 implementation. It is limited to that Desktop release. It does not replace or bundle host core services.
+This local plugin derives from the MIT-licensed official `@deepseek-ai/dsh-compaction-basic` 0.2.2-rc.1 implementation. It is limited to that Desktop release. It does not replace or bundle host core services.
 
 Download the versioned `.tgz` from Releases and follow INSTALL.md. This is a
 prerelease: controlled integration tests passed, while live provider and Electron

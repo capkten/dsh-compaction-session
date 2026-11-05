@@ -41,3 +41,11 @@ test('summary output is reserved even when conversation output is smaller',async
 test('isolated engines inherit shared settings without sharing mutable policy objects',async()=>{const {default:Settings}=await import('dsh-compaction-session/settings');const ctx=new Context();try{new Settings(ctx,{thresholdTokens:256000,headroomTokens:1024,maxTokens:8192,modelPolicies:[{provider:'p',model:'m',thresholdTokens:250000}]});const e=new Basic(ctx,{auto:false});assert.equal(e.config.thresholdTokens,256000);assert.equal(e.config.modelPolicies[0].thresholdTokens,250000);assert.notEqual(e.config.modelPolicies,ctx.sessionCompactionSettings.config.modelPolicies);}finally{await ctx.fiber.dispose();}});
 test('automatic pre-step pressure commits a checkpoint before admitting the next step',async()=>{const {ctx,e,a}=setup({auto:true,thresholdTokens:20000});const s=session('high');let admitted=false;try{await ctx.waterfall('agent/pre-step',{agent:agent(s),signal:new AbortController().signal},async()=>{admitted=true;});assert(admitted);assert.equal(a.calls.length,1);assert(s.snapshotEvents().some(x=>x.type==='compaction/summary'));assert(ctx.tokenMeter.measure(s).totalTokens<20000);}finally{await ctx.fiber.dispose();}});
 test('concurrent sessions keep their own reasoning and durable checkpoints',async()=>{const {ctx,e,a}=setup({thresholdTokens:20000});const one=session('low'),two=session('high');try{await Promise.all([one,two].map(s=>e.compactIfNeeded(agent(s),'pressure',new AbortController().signal)));assert.deepEqual(a.calls.map(x=>x.reasoningEffort).sort(),['high','low']);for(const s of [one,two]){assert.equal(s.snapshotEvents().filter(x=>x.type==='compaction/summary').length,1);assert(ctx.tokenMeter.measure(s).totalTokens<20000);}}finally{await ctx.fiber.dispose();}});
+
+test('DSH 0.2.2 manifest and preset avoid the removed list-agents entry',()=>{
+ const meta=JSON.parse(fs.readFileSync(new URL('../package.json',import.meta.url),'utf8'));
+ assert.equal(meta.engines.dsh,'=0.2.2-rc.1');
+ const patch=fs.readFileSync(new URL('../cordis.patch.yml',import.meta.url),'utf8');
+ assert(!patch.includes('@deepseek-ai/dsh-tool-subagent-control/list-agents'));
+ assert(patch.includes("'@deepseek-ai/dsh-tool-subagent-control'"));
+});

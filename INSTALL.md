@@ -1,12 +1,12 @@
 # 安装与配置（Windows Desktop）
 
-仅支持 DeepSeek Harness Desktop **0.2.1-rc.5**。升级 DSH 前应先检查兼容性。
+仅支持 DeepSeek Harness Desktop **0.2.2-rc.1**。升级 DSH 前应先检查兼容性。
 本插件包含该版本四种本地 preset 的完整定义；有自定义 preset 的用户应先比较
 `cordis.patch.yml`，在隔离 Profile 验证。不要覆盖自己的整份 Profile 或供应商配置。
 
 ## 1. 下载和备份
 
-从本仓库 Releases 下载 `dsh-compaction-session-0.1.0.tgz` 和 `SHA256SUMS.txt`。
+从本仓库 Releases 下载 `dsh-compaction-session-0.1.1.tgz` 和 `SHA256SUMS.txt`。
 不要使用页面自动生成的 Source code ZIP 代替安装包。
 
 完全退出 DSH（包括托盘），备份 `%USERPROFILE%\.dsh\profiles\desktop` 中的
@@ -24,7 +24,7 @@
 ```json
 {
   "dependencies": {
-    "dsh-compaction-session": "file:C:/Users/YOUR_NAME/.dsh/deploy/dsh-compaction-session-0.1.0.tgz"
+    "dsh-compaction-session": "file:C:/Users/YOUR_NAME/.dsh/deploy/dsh-compaction-session-0.1.1.tgz"
   },
   "dsh": {
     "profile": {
